@@ -56,7 +56,10 @@ function move(element, startPos, stopPos) {
 
 var element = document.getElementById('ID');
 
-animate(move(element, { x : 100, y : 0 }, { x : 0, y : 0 }), 1000, animate.easeInOut, function() {
-    console.log('I made it!');
-});
+animate(
+    move(element, { x : 100, y : 0 }, { x : 0, y : 0 }),
+    1000,
+    animate.easeInOut,
+    function() { console.log('I made it!'); }
+);
 ```
