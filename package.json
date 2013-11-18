@@ -1,5 +1,6 @@
 {
   "name": "animate",
+  "description": "A simple animation handler",
   "version": "0.0.2",
   "main" : "animate.js",
   "dependencies": {},
