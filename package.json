@@ -2,7 +2,7 @@
   "name": "animate",
   "description": "A simple animation handler",
   "version": "0.0.3",
-  "main" : "animate.js",
+  "main" : "src/animate.js",
   "dependencies": {},
   "devDependencies": {
     "grunt"                 : "~0.4.1",

@@ -1,5 +1,23 @@
 'use strict';
 
+/***************
+ *  Utilities  *
+ ***************/
+
+var c = 1;
+
+/**
+ * Returns a unique number for identifying animation handlers
+ * @return {Number} An ID that specifies a unique animation handler
+ */
+function cuniq() {
+    var d = new Date(),
+        m = d.getMilliseconds() + '',
+        u = ++d + m + (++c === 10000 ? (c = 1) : c);
+
+    return u;
+}
+
 /********************
  *  Animation Shim  *
  ********************/
@@ -61,7 +79,7 @@ function tick(now) {
         if (now >= listener.finish) {
             listener.callback(1);
             if (listener.oncomplete) {
-                listener.oncomplete();
+                setTimeout(listener.oncomplete, 0);
             }
 
             // Remove the completed animation
@@ -95,7 +113,8 @@ function animate(callback, duration, warp, oncomplete) {
         warp       : warp || function (prog) { return prog; },
         oncomplete : oncomplete,
         start      : Date.now(),
-        finish     : Date.now() + duration
+        finish     : Date.now() + duration,
+        uid        : cuniq()
     };
 
     listeners.push(listener);
@@ -104,6 +123,29 @@ function animate(callback, duration, warp, oncomplete) {
     if (listeners.length === 1) {
         window.requestAnimationFrame(tick);
     }
+
+    return listener.uid;
+}
+
+/**
+ * Call to stop a particular animation from occurring. If an animation has been
+ * canceled, it will still attempt to call the oncomplete method, passing a value
+ * of 'true' as an argument.
+ * @param {Number} uid The uid associated with a particular animation
+ */
+function cancel(uid) {
+    var listener;
+
+    // Search for the listener with the given uid and remove it
+    for (var i = listeners.length - 1; i >= 0; i -= 1) {
+        listener = listeners[i];
+        if (listener.uid === uid) {
+            listeners.splice(i, 1);
+
+            // Run an oncomplete function if provided
+            if (listener.oncomplete) { listener.oncomplete(true); }
+        }
+    }
 }
 
 // Add time warping functions
@@ -111,8 +153,10 @@ animate.easeIn    = easeIn;
 animate.easeOut   = easeOut;
 animate.easeInOut = easeInOut;
 
+animate.cancel = cancel;
+
 /*************
  *  Exports  *
  *************/
- 
+
 module.exports = animate;
