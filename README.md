@@ -37,7 +37,21 @@ function easeIn(complete) {
 ```
 
 ### oncomplete
-A function called when the animation has completed.
+A function called when the animation has completed. If a value of 'true' is passed for the first argument, it is because the animation had been manually cancelled using the animate.cancel(id) method (see below).
+
+## Cancelling Animations
+
+When calling the animate() function, a uid is returned. This uid may be used to cancel an animation handler as follows:
+
+```javascript
+var id = animate(doSomething, 1000);
+
+// Elsewhere in the code...
+
+animate.cancel(id);
+```
+
+When an animation is cancelled, it will still attempt to call the ``` oncomplete ``` callback if available. It passes a value of ``` true ``` in to the callback to signify that the animation had been cancelled.
 
 Example
 =======
